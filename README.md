@@ -41,7 +41,7 @@ jira-docker
 - 此时会要求配置数据库，选择 `My Own Database`，根据 `docker-compose.yml` 的配置填写数据库配置：
   - Database Type:  Mysql
   - Hostname:       172.168.88.2
-  - Port:           3306
+  - Port:           33061
   - Database:       jira
   - Username:       jira
   - Password:       123456
