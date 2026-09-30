@@ -1,6 +1,6 @@
 # JIRA-Docker
 
-> docker 一键部署 JIRA 破解版
+> docker 一键部署 JIRA Software 8.15.0 破解版（含高级路线图 Advanced Roadmaps 中文汉化）
 
 ------
 
@@ -15,14 +15,13 @@
 ```
 jira-docker
 ├── jira
-│   ├── crack .................. [docker 构建剧本]
-│   ├── atlassian .............. [jira web 数据]
-│   │   ├── export ............. [导出备份数据目录]
-│   │   └── import ............. [导入备份数据目录]
+│   ├── agent .................. [atlassian-agent 破解 agent]
+│   ├── plugins-patched ........ [高级路线图插件汉化版 jar（构建时覆盖镜像内插件）]
+│   ├── atlassian .............. [jira web 数据（运行时生成，不入库）]
 │   └── conf
 │       └── server.xml ......... [jira web 配置]
 ├── pg
-│   ├── data ................... [postgresql 数据库文件]
+│   ├── data ................... [postgresql 数据库文件（运行时生成，不入库）]
 │   └── driver ................. [postgresql JDBC 驱动]
 ├── .gitignore
 ├── Dockerfile ................. [docker 编排剧本]
@@ -32,7 +31,7 @@ jira-docker
 
 ## 部署步骤
 
-- 宿主机安装 docker、docker-compose
+- 宿主机安装 docker、docker compose
 - 下载仓库： `git clone https://github.com/yinyuscloor/jira-docker.git /usr/local/jira-docker`
 - 打开仓库目录： `cd /usr/local/jira-docker`
 - 构建镜像并运行： `docker compose up -d`
@@ -50,29 +49,27 @@ jira-docker
   - Application Title:  Anyone JIRA
   - Mode:               Private
   - Base URL:           http://127.0.0.1:8080
-- 点击 `Next`，此时会提供 Server ID，并要求填写 Your License Key。由于这是破解版（破解原理见下文），这里只需要随便填一个符合格式的 License 即可（此处会做前端的格式校验），例如这个试用版的 License：
+- 点击 `Next`，此时会提供 Server ID（形如 `Bxxx-xxxx-xxxx-xxxx`），先复制下来
+- 在宿主机执行以下命令生成许可证（把 `<SERVER-ID>` 替换为上一步复制的值）：
 
-```
-AAAB2g0ODAoPeJx9Ul1vmzAUfedXIO1xIjWBOhDJ0hIgK8tXM5JN3ZtLbopTYjzbSUp//aAQKV2iS
-BaSLc6555x7vvyGtZmAMB1k2nbfdvs2NoNkaXZRFxsvEoBnhRAgOxOWAlewLAXM6A5IMJ9Oo59BP
-JgYgQSqWcFDqoHUQAv5loOMG5AQVCqZqFFkxXO2Y7oSkjcA87k0M62F6t/dvWcshw4rjCllXAOnP
-IXoTTBZttM830K96hhbJulJZbRmDfVsEk/jZRQas/3uGeR8s1IgFbHsk7gbXEIW632qO/XFUsVGH
-6mEzgXRjX9pqtkBiJZ7+JTl+Xvr+VfFVivuGtGB5vuPPMmG5gqMuXyhnKnmqc6liiUvUppnhdJ9D
-3nICAquK9KoCiknGpT+Vn86abFr5F2Ibqc+UJWRaYCC0SL4fsDxonS/qq3Y/h3/CbNguQrGj+n7a
-BCv4ns8fB3IfLjIH+Z8dRTsSQxHh/EaH0kz4tzTjUgSTaUG2VprlxCHZBKHSTSzJnbPRz3HQ/fYw
-fjTTq/VKAF5AFnBh4nrW2PP7Vpd/ORbP5yxa7xCeUrVxgj1kOc49rVOX7blcS/TjCr4v9HnYKjqK
-IVkqjVdySdXLLSr+VBe2/kH+/oqMzAtAhQd1RBiaK+26UaYq3WYUk3ZTp0+mAIVAJLIwMbTviACo
-2gpDgh8DlsrDtWuX02mi
+```bash
+docker compose exec jira java -jar /var/agent/atlassian-agent.jar -d \
+  -p jira -m test@test.com -n jira -o http://localhost:8080 -s <SERVER-ID>
 ```
 
-- 点击 `Next`，此时会要求填写 JIRA 管理员信息：
-  - Full name:         Administrator
-  - Email Address:     admin@xyz.com
-  - Username:          admin 
-  - Password:          admin
-  - Confirm Password:  admin
-- 点击 `Next`，然后在 Configure Email Notifications 选择 `later`（因为邮箱是假的），点击 `Finish`
-- 最后配置语言、头像等，则完成 JIRA 初始化
+- 把输出的许可证粘贴到 `Your License Key`，点击 `Next`
+- 然后填写 JIRA 管理员信息（Full name / Email / Username / Password 自行填写）
+- 点击 `Next`，在 Configure Email Notifications 选择 `later`，点击 `Finish`
+- 最后配置语言（中文）、头像等，完成 JIRA 初始化
+
+> 注：`-d` 参数生成的是 Data Center 许可证，可解锁高级路线图（顶部导航「计划」菜单）等 DC 专属功能。
+> 如果初始化时已经填了 Server 版许可证，后续想换成 DC 版：管理页面会拒绝粘贴，需要直接改数据库后重启：
+>
+> ```bash
+> docker compose exec postgres psql -U jira -d jira -c \
+>   "UPDATE productlicense SET license='<DC许可证>' WHERE id=10000;"
+> docker compose restart jira
+> ```
 
 
 ## 可选：数据迁移
@@ -89,14 +86,34 @@ docker 创建的 JIRA 完全是空的，如果你在其他地方有部署 JIRA�
 > 注：数据迁移是全库迁移，所以用户数据、License 数据等都会被覆盖，故前面创建的管理员账号在迁移后已经不存在了。
 
 
+## 部署到另一台服务器
+
+本项目是自包含的，另一台服务器只需：
+
+1. `git clone` 本仓库
+2. `docker compose up -d`
+3. 按上文「部署步骤」完成初始化；**许可证需用新机器的 Server ID 重新生成**（命令同上，agent jar 已包含在仓库中）
+
+如需迁移数据，额外拷贝 `pg/data` 和 `jira/atlassian` 两个目录（或按上文用导出备份恢复）。
+
+
 ## 附一：破解原理
 
-破解步骤可参考 [https://github.com/ealebed/jira](https://github.com/ealebed/jira) 。
+使用 [atlassian-agent](https://github.com/hgqapp/atlassian-agent)（v1.3.1，源码在 `jira/agent/atlassian-agent.jar`），通过 `docker-compose.yml` 中的环境变量注入 JVM：
 
-大概原理是通过 JD 反编译 `atlassian-extras-3.2.jar` 和 `atlassian-universal-plugin-manager-plugin-2.22.4.jar` 这两个 jar 文件，找到其中的 `loadLicenseConfiguration` 函数，把 License 信息硬编码，然后重新编译并覆盖同名 jar 文件即可。
+```
+JVM_SUPPORT_RECOMMENDED_ARGS=-javaagent:/var/agent/atlassian-agent.jar
+```
 
-此破解方法不依赖用户填写的 License 内容是什么，所以前面是随便填了一个。
+agent 在运行时 patch 许可证校验逻辑，因此对 Jira 8.x 各版本通用，升级版本无需重新破解。许可证由 agent 自带的 keygen 按 Server ID 生成。
 
-但是因为 JIRA 前端会对 License 格式做校验，因此前面在初始化时还是形式上填了一个试用版 License 。
 
-> 当前硬编码的 License 过期时间为 2030 年
+## 附二：高级路线图（Advanced Roadmaps）汉化
+
+官方未提供高级路线图的中文翻译。`jira/plugins-patched/` 中的 3 个 jar 是在官方 8.15.0 插件基础上汉化的版本，覆盖约 1500 条词条（计划页、项目群、团队管理、管理设置、错误提示等主要界面），汉化方式包括：
+
+- 为插件 i18n 资源添加 `*_zh_CN.properties`（服务端渲染部分）
+- 将前端编译 JS 中的 `AJS.I18n.getText("key")` 调用直接替换为中文文案（前端页面）
+- 将 `atlassian-plugin.xml` 中硬编码的菜单 label 改为中文
+
+构建镜像时覆盖 `WEB-INF/application-installation/jira-software-application/` 中的原始插件，全新部署自动生效。升级 Jira 版本后需基于新版插件重新汉化。
