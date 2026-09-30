@@ -53,22 +53,22 @@ jira-docker
 - 点击 `Next`，此时会提供 Server ID，并要求填写 Your License Key。由于这是破解版（破解原理见下文），这里只需要随便填一个符合格式的 License 即可（此处会做前端的格式校验），例如这个试用版的 License：
 
 ```
-AAAB2g0ODAoPeNp9kttum0AQhu95CqTetKpAHHyoLa1UAhsFAtgF6iqWb9YwNqQY8AJOePtysuwGx
-3c72jl88//zxQtL1iIVKwmsIM+lybx+qJpXx5LI/IVqBTSP0gSJE0GYCj9kWWT2FCAJ0ywDypuRD
-0kOOIiKJgvbHnaWju5ixi4PW6CL3e+87oA4kVHTpCB+YZMDIFGSpyNJkIWfxyPvpwfmNaKEH5QsS
-+qHJAeNFIAaIk4Yc5LA9FO9KoO2nbqwLOyoumKev/B7FtHqqm7CibMzArZIFA8ZXKAnoLqGHtauw
-q0N+Yl79OQHznRfVh1gRtOg9Au+Cbg83RVvhAJfd4xOgApawr20GoaokBRAu9S4I30ieYgs9U19x
-M6rc8RbZXbapyvjebwdGd7uu6qT5xcldCrRpkt3/acM4mD5S1XWEyM4ONm4DJUN2iDGLbe5T6Os9
-eHC8rlBN2y8JWitVc2ckMT/RNQ7Kw8M7efUGpu65mKbM8WpOB2PZkLX5qNGdQq6kXZ7mlsQ2lTuS
-JwDs6B7kkQ5adceeK1SaH8+XlZvyvnqpf9UasEyGuW92RpcFDdqFNbtUdivzSJst8m3zZzFJxKX7
-cBugcHJ3DHgmuC67tKzi/8BJN5ISjAsAhRZIHEuQbkGoHCRSit5W4n8GSiYNQIUK0cCnanxR3KFT
-lht2tUwCQi3GkE=X02mi
+AAAB2g0ODAoPeJx9Ul1vmzAUfedXIO1xIjWBOhDJ0hIgK8tXM5JN3ZtLbopTYjzbSUp//aAQKV2iS
+BaSLc6555x7vvyGtZmAMB1k2nbfdvs2NoNkaXZRFxsvEoBnhRAgOxOWAlewLAXM6A5IMJ9Oo59BP
+JgYgQSqWcFDqoHUQAv5loOMG5AQVCqZqFFkxXO2Y7oSkjcA87k0M62F6t/dvWcshw4rjCllXAOnP
+IXoTTBZttM830K96hhbJulJZbRmDfVsEk/jZRQas/3uGeR8s1IgFbHsk7gbXEIW632qO/XFUsVGH
+6mEzgXRjX9pqtkBiJZ7+JTl+Xvr+VfFVivuGtGB5vuPPMmG5gqMuXyhnKnmqc6liiUvUppnhdJ9D
+3nICAquK9KoCiknGpT+Vn86abFr5F2Ibqc+UJWRaYCC0SL4fsDxonS/qq3Y/h3/CbNguQrGj+n7a
+BCv4ns8fB3IfLjIH+Z8dRTsSQxHh/EaH0kz4tzTjUgSTaUG2VprlxCHZBKHSTSzJnbPRz3HQ/fYw
+fjTTq/VKAF5AFnBh4nrW2PP7Vpd/ORbP5yxa7xCeUrVxgj1kOc49rVOX7blcS/TjCr4v9HnYKjqK
+IVkqjVdySdXLLSr+VBe2/kH+/oqMzAtAhQd1RBiaK+26UaYq3WYUk3ZTp0+mAIVAJLIwMbTviACo
+2gpDgh8DlsrDtWuX02mi
 ```
 
 - 点击 `Next`，此时会要求填写 JIRA 管理员信息：
   - Full name:         Administrator
   - Email Address:     admin@xyz.com
-  - Username:           
+  - Username:          admin 
   - Password:          admin
   - Confirm Password:  admin
 - 点击 `Next`，然后在 Configure Email Notifications 选择 `later`（因为邮箱是假的），点击 `Finish`

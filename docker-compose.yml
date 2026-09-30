@@ -26,12 +26,14 @@ services:
       dockerfile: Dockerfile
     environment:
       - TZ=Asia/Shanghai
+      - JVM_SUPPORT_RECOMMENDED_ARGS=-javaagent:/var/agent/atlassian-agent.jar
 #      - JVM_MINIMUM_MEMORY=1g
 #      - JVM_MAXIMUM_MEMORY=12g
 #      - JVM_CODE_CACHE_ARGS='-XX:InitialCodeCacheSize=1g -XX:ReservedCodeCacheSize=8g'
     volumes:
       - ./jira/conf/server.xml:/opt/atlassian/jira/conf/server.xml
-      - ./jira/atlassian:/var/atlassian/jira
+      - ./jira/atlassian:/var/atlassian/application-data/jira
+      - ./jira/agent:/var/agent
     ports:
       - "8080:8080"
     depends_on:
