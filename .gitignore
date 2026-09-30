@@ -1,2 +1,2 @@
-./mysql/data/*
-./jira/atlassian/*
+pg/data/
+jira/atlassian/

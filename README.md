@@ -21,9 +21,9 @@ jira-docker
 │   │   └── import ............. [导入备份数据目录]
 │   └── conf
 │       └── server.xml ......... [jira web 配置]
-├── mysql
-│   ├── data ................... [mysql 数据库文件]
-│   └── driver ................. [mysql JDBC 驱动]
+├── pg
+│   ├── data ................... [postgresql 数据库文件]
+│   └── driver ................. [postgresql JDBC 驱动]
 ├── .gitignore
 ├── Dockerfile ................. [docker 编排剧本]
 ├── docker-compose.yml ......... [docker 编排剧本]
@@ -33,15 +33,15 @@ jira-docker
 ## 部署步骤
 
 - 宿主机安装 docker、docker-compose
-- 下载仓库： `git clone https://github.com/lyy289065406/jira-docker /usr/local/jira-docker`
+- 下载仓库： `git clone https://github.com/yinyuscloor/jira-docker.git /usr/local/jira-docker`
 - 打开仓库目录： `cd /usr/local/jira-docker`
-- 构建镜像并运行： `docker-compose.yml up -d`
+- 构建镜像并运行： `docker compose up -d`
 - 启动后，访问 [`http://localhost:8080`](http://localhost:8080) 打开 JIRA
 - 初次运行会跳转到 Setup 界面，选择 `I'll set it up myself`，然后点击 `Next`
-- 此时会要求配置数据库，选择 `My Own Database`，根据 `docker-compose.yml` 的配置填写数据库配置：
-  - Database Type:  Mysql
-  - Hostname:       172.168.88.2
-  - Port:           33061
+- 此时会要求配置数据库，选择 `My Own Database`/`其它数据库 (推荐用于正式生产环境)`，根据 `docker-compose.yml` 的配置填写数据库配置：
+  - Database Type:  PostgreSQL
+  - Hostname:       postgres
+  - Port:           5432
   - Database:       jira
   - Username:       jira
   - Password:       123456
@@ -50,7 +50,7 @@ jira-docker
   - Application Title:  Anyone JIRA
   - Mode:               Private
   - Base URL:           http://127.0.0.1:8080
-- 点击 `Next`，此时会提供 Server ID，并要求填写 Your License Key。由于这是破解版（破解原理见下文），这里只需要随便填一个符合格式的 License 即可（此处会做前端的格式校验），例如这个试用版的 License（申请方式见下文，但若没必要就不需要申请了）：
+- 点击 `Next`，此时会提供 Server ID，并要求填写 Your License Key。由于这是破解版（破解原理见下文），这里只需要随便填一个符合格式的 License 即可（此处会做前端的格式校验），例如这个试用版的 License：
 
 ```
 AAAB2g0ODAoPeNp9kttum0AQhu95CqTetKpAHHyoLa1UAhsFAtgF6iqWb9YwNqQY8AJOePtysuwGx
@@ -68,7 +68,7 @@ lht2tUwCQi3GkE=X02mi
 - 点击 `Next`，此时会要求填写 JIRA 管理员信息：
   - Full name:         Administrator
   - Email Address:     admin@xyz.com
-  - Username:          admin
+  - Username:           
   - Password:          admin
   - Confirm Password:  admin
 - 点击 `Next`，然后在 Configure Email Notifications 选择 `later`（因为邮箱是假的），点击 `Finish`
@@ -100,15 +100,3 @@ docker 创建的 JIRA 完全是空的，如果你在其他地方有部署 JIRA�
 但是因为 JIRA 前端会对 License 格式做校验，因此前面在初始化时还是形式上填了一个试用版 License 。
 
 > 当前硬编码的 License 过期时间为 2030 年
-
-
-## 附二：90 天试用 License 申请方式
-
-- 在 [Atlassian](https://www.atlassian.com/) 官网注册一个账号
-- 在 [个人面板](https://my.atlassian.com/product) 中点击 [`New Trial License`](https://my.atlassian.com/license/evaluation)，填写 License 信息：
-  - Product:           Jira Software
-  - License type:      Jira Software (Data Center)
-  - Organization:      [你的注册邮箱]
-  - Your instance is:  up and running
-  - Server ID:         [在初始化 JIRA 时填写 License 的步骤会得到]
-- 点击 `Generate License` 后，可得到 90 天试用的 License Key
